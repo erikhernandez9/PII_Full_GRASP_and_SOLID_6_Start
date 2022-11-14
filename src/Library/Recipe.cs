@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Full_GRASP_And_SOLID
 {
@@ -15,6 +16,24 @@ namespace Full_GRASP_And_SOLID
         private IList<BaseStep> steps = new List<BaseStep>();
 
         public Product FinalProduct { get; set; }
+
+        public bool Cooked = false;
+
+        public int GetCookTime()
+        {
+            int tiempo = 0;
+            foreach (BaseStep step in this.steps)
+            {
+                tiempo += step.Time;
+            }
+            return tiempo;
+        }
+        public void Cook ()
+        {
+            TimerClien tiempo = new TimerClien(this);
+            CountdownTimer timer = new CountdownTimer();
+            timer.Register(this.GetCookTime(), tiempo); // Use adapter para TimerClien, incluido en el patron isp
+        } 
 
         // Agregado por Creator
         public void AddStep(Product input, double quantity, Equipment equipment, int time)
